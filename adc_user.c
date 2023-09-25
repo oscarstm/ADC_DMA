@@ -1,0 +1,53 @@
+/*
+ * adc_user.c
+ *
+ *  Created on: Sep 21, 2023
+ *      Author: oscar
+ */
+
+#include "adc_user.h"
+
+void ADC1_Init(void) {
+	RCC->APB2ENR |= (RCC_APB2ENR_ADC1EN);
+	RCC->AHB1ENR |= (RCC_AHB1ENR_GPIOAEN);
+
+	// PA5
+	GPIOA->MODER |= (GPIO_MODER_MODER5_0);
+	GPIOA->MODER |= (GPIO_MODER_MODER5_1);
+
+	GPIOA->PUPDR &= ~(GPIO_PUPDR_PUPDR5_0);
+	GPIOA->PUPDR &= ~(GPIO_PUPDR_PUPDR5_1);
+
+	ADC->CCR |= (ADC_CCR_ADCPRE_0);
+	ADC->CCR &= ~(ADC_CCR_ADCPRE_0);
+
+	ADC1->CR1 |= (ADC_CR1_SCAN);
+	ADC1->CR1 &= ~(ADC_CR1_RES_0);
+	ADC1->CR1 &= ~(ADC_CR1_RES_1);
+
+	ADC1->CR2 |= (ADC_CR2_CONT);
+	ADC1->CR2 |= (ADC_CR2_EOCS);
+	ADC1->CR2 &= ~(ADC_CR2_ALIGN);
+
+	ADC1->SMPR2 &= ~(ADC_SMPR2_SMP5_0);
+	ADC1->SMPR2 &= ~(ADC_SMPR2_SMP5_1);
+	ADC1->SMPR2 &= ~(ADC_SMPR2_SMP5_2);
+
+	// 1 conversions == 0000
+	ADC1->SQR1 &= ~(ADC_SQR1_L_0);
+	ADC1->SQR1 &= ~(ADC_SQR1_L_1);
+	ADC1->SQR1 &= ~(ADC_SQR1_L_2);
+	ADC1->SQR1 &= ~(ADC_SQR1_L_3);
+
+	//
+	ADC1->CR2 |= (ADC_CR2_DMA);
+	ADC1->CR2 |= (ADC_CR2_DDS);
+
+	// SEQ1 for Channel 5 == 00101
+	ADC1->SQR3 |= (ADC_SQR3_SQ1_0);
+	ADC1->SQR3 &= ~(ADC_SQR3_SQ1_1);
+	ADC1->SQR3 |= (ADC_SQR3_SQ1_2);
+	ADC1->SQR3 &= ~(ADC_SQR3_SQ1_3);
+	ADC1->SQR3 &= ~(ADC_SQR3_SQ1_4);
+}
+
